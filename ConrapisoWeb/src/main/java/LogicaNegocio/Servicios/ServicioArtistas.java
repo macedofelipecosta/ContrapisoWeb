@@ -1,14 +1,12 @@
 package LogicaNegocio.Servicios;
 
+import LogicaConexion.Interfaces.RepositorioArtista;
 import LogicaNegocio.Dominio.Artista;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ServicioArtistas {
-    private List<Artista> artistasRegistrados=new ArrayList<Artista>();
-
-
+    private static RepositorioArtista repositorioArtistas = new LogicaConexion.Repositorios.RepositorioArtista();
 
 
     public Artista nuevoArtista(int id, String nombre){
@@ -16,15 +14,22 @@ public class ServicioArtistas {
     }
 
     public void nuevoArtistaregistrado(Artista artista){
-        this.artistasRegistrados.add(artista);
+        this.repositorioArtistas.save(artista);
     }
 
     public Artista buscarArtistaPorID(int id){
-        for(Artista a:artistasRegistrados){
-            if (a.getIdArtista()==id){
-                return a;
-            }
-        }
-        return null;
+        return repositorioArtistas.findById(id);
+    }
+
+    public List<Artista> getArtistas() {
+        return repositorioArtistas.findAll();
+    }
+
+    public Artista eliminarArtista(int id) {
+        return repositorioArtistas.deleteById(id);
+    }
+
+    public void actualizarArtista(Artista artista) {
+        repositorioArtistas.update(artista);
     }
 }
