@@ -1,35 +1,53 @@
 package LogicaNegocio.Dominio;
 
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
 public class VideoClip {
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int videoClip_id;
     private String titulo;
-    private Artista artista;
-    private Album album;
+    @ManyToMany
+    @JoinTable(
+            name = "videoclip_artista",
+            joinColumns = @JoinColumn(name = "videoclip_id"),
+            inverseJoinColumns = @JoinColumn(name = "artista_id")
+    )
+    private List<Artista> artistas;
+    @ManyToMany
+    @JoinColumn(name="album_id")
+    private List<Album> albums;
     private String url;
 
-    public VideoClip(String titulo, Artista artista, Album album, String url) {
+    public VideoClip(){}
+
+    public VideoClip(String titulo, String url) {
         this.titulo = titulo;
-        this.artista = artista;
-        this.album = album;
+        this.artistas = new ArrayList<>();
         this.url = url;
+        this.albums = new ArrayList<>();
     }
 
     // region Getters
 
-    public int getId() {
-        return id;
+    public int getVideoClip_id() {
+        return videoClip_id;
     }
 
     public String getTitulo() {
         return titulo;
     }
 
-    public Artista getArtista() {
-        return artista;
+    public List<Artista> getArtistas() {
+        return artistas;
     }
 
-    public Album getAlbum() {
-        return album;
+    public List<Album> getAlbums() {
+        return albums;
     }
 
     public String getUrl() {

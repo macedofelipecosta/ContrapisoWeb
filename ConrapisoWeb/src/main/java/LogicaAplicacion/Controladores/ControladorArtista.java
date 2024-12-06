@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,7 +22,7 @@ public class ControladorArtista {
                                               @RequestParam(value = "nombre") String nombre) {
         try {
             // Aquí llamas a la lógica para crear un nuevo artista
-            Artista nuevoArtista = new Artista(id, nombre);
+            Artista nuevoArtista = new Artista(nombre);
 
             // Supongamos que usas un servicio para guardar el artista
             fachada.crearArtista(nuevoArtista);

@@ -10,7 +10,7 @@ public class ServicioArtistas {
 
 
     public Artista nuevoArtista(int id, String nombre){
-        return new Artista(id, nombre);
+        return new Artista(nombre);
     }
 
     public void nuevoArtistaregistrado(Artista artista){

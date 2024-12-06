@@ -1,11 +1,18 @@
 package LogicaNegocio.Dominio;
 
+import jakarta.persistence.Embeddable;
+
+@Embeddable
 public class Biografia {
     private int id;
     private String contenido;
 
     public Biografia(String contenido) {
         this.contenido = contenido;
+    }
+
+    public Biografia() {
+
     }
 
 

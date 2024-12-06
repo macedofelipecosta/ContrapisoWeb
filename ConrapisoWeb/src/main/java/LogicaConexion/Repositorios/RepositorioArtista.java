@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RepositorioArtista implements LogicaConexion.Interfaces.RepositorioArtista {
+public class RepositorioArtista implements LogicaConexion.Interfaces.RepositorioArtista{
 
     private static Map<Integer, Artista> artistas = new HashMap<>();
 
