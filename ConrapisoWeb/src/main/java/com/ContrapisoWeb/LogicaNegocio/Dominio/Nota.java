@@ -11,14 +11,16 @@ public class Nota {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int nota_id;
+    private int notaId;
+
+    //ToDo: Agregar logica para guardar al autor de la nota;
 
     @Setter
     private String contenido;
 
     @Setter
     @ManyToOne // Relación muchos a uno (un artista puede tener varias notas)
-    @JoinColumn(name = "artista_id") // Llave foránea en la tabla Nota
+    @JoinColumn(name = "artistaId",  referencedColumnName = "artistaId") // Referencia explícita al campo en Artista
     private Artista artista;
 
     @Setter
@@ -30,8 +32,9 @@ public class Nota {
     public Nota() {
     }
 
-    public Nota(String contenido) {
+    public Nota(String contenido, Artista artista) {
         this.contenido = contenido;
+        this.artista=artista;
         this.estado = EstadoNotas.EDITANDO;
     }
 

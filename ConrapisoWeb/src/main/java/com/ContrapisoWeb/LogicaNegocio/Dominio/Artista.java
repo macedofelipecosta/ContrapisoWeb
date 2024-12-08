@@ -12,7 +12,7 @@ import java.util.List;
 public class Artista {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idArtista;
+    private int artistaId;
 
     @Setter
     private String nombre;

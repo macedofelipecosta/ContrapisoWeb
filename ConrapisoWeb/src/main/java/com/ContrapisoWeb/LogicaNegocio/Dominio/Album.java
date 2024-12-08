@@ -21,7 +21,7 @@ public class Album {
     @JoinTable(
             name = "album_artista",
             joinColumns = @JoinColumn(name = "album_id"),
-            inverseJoinColumns = @JoinColumn(name = "artista_id")
+            inverseJoinColumns = @JoinColumn(name = "artistaId")
     )
     private List<Artista> artistas;
 

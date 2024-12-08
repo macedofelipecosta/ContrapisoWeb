@@ -15,7 +15,7 @@ public class VideoClip {
     @JoinTable(
             name = "videoclip_artista",
             joinColumns = @JoinColumn(name = "videoclip_id"),
-            inverseJoinColumns = @JoinColumn(name = "artista_id")
+            inverseJoinColumns = @JoinColumn(name = "artistaId")
     )
     private List<Artista> artistas;
     @ManyToMany

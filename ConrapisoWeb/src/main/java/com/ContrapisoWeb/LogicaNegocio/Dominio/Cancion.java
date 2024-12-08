@@ -15,7 +15,7 @@ public class Cancion{
     @JoinTable(
             name = "cancion_artista", // Nombre de la tabla intermedia
             joinColumns = @JoinColumn(name = "cancion_id"), // Llave foránea de Cancion
-            inverseJoinColumns = @JoinColumn(name = "artista_id") // Llave foránea de Artista
+            inverseJoinColumns = @JoinColumn(name = "artistaId") // Llave foránea de Artista
     )
     private List<Artista> artistas;
 

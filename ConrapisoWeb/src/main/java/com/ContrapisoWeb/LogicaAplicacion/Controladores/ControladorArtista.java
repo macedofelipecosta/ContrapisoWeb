@@ -1,5 +1,6 @@
 package com.ContrapisoWeb.LogicaAplicacion.Controladores;
 
+import com.ContrapisoWeb.LogicaAplicacion.DTOs.DTOArtista;
 import com.ContrapisoWeb.LogicaAplicacion.DTOs.DTOGeneroMusical;
 import com.ContrapisoWeb.LogicaNegocio.Dominio.Artista;
 import com.ContrapisoWeb.LogicaNegocio.Dominio.Biografia;
@@ -7,36 +8,52 @@ import com.ContrapisoWeb.LogicaNegocio.Dominio.GeneroMusical;
 import com.ContrapisoWeb.LogicaNegocio.Fachada.Fachada;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-
 public class ControladorArtista {
     @Autowired
     Fachada fachada;
 
 
-
-    @GetMapping("/newArtista")
+    @RequestMapping("/newArtista")
     public ResponseEntity<?> createNewArtista(@RequestParam(value = "nombre") String nombre) {
         try {
-            //ToDO: Validar que no haya dos artistas con el mismo nombre
-
-            // Aquí llamas a la lógica para crear un nuevo artista
-            Artista nuevoArtista = new Artista(nombre);
-
+            // Validar que el nombre no sea nulo o vacío
+            if (nombre == null || nombre.isBlank()) {
+                return ResponseEntity.badRequest().body("El nombre del artista es obligatorio.");
+            }
             // Supongamos que usas un servicio para guardar el artista
-            fachada.crearArtista(nuevoArtista);
+            if (fachada.crearArtista(nombre)) {
+                return ResponseEntity.ok("Artista creado con éxito: " + nombre);
+            } else {
+                return ResponseEntity.status(400).body("El artista ya existe o no se pudo crear.");
+            }
 
-            return ResponseEntity.ok("Artista creado con éxito: " + nuevoArtista);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error al crear el artista: " + e.getMessage());
+            return ResponseEntity.status(500).body("Error interno al crear el artista: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/getArtistaByName")
+    public ResponseEntity<?> getArtistaByName(@RequestParam(value = "nombre", required = true) String nombre) {
+        try {
+            if (nombre.isEmpty()) {
+                throw new RuntimeException("No ha proporcionado ningún nombre!");
+            }
+            Optional<Artista> artistaOptional = fachada.getArtistaByName(nombre);
+            //ToDo: resolver cuando se encuentre más de un artista con ese nombre o combinaciones de letras
+            if (artistaOptional.isEmpty()) {
+                throw new RuntimeException("No se ha encontrado al artista!");
+            }
+            Artista artista = artistaOptional.get();
+            return ResponseEntity.ok(artista.getNombre());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body("Artista no encontrado " + e.getMessage());
         }
     }
 
@@ -50,7 +67,7 @@ public class ControladorArtista {
             if (artistaOptional.isEmpty()) {
                 return ResponseEntity.status(404).body("Artista no encontrado.");
             }
-            Artista artista= artistaOptional.get();
+            Artista artista = artistaOptional.get();
 
             return ResponseEntity.ok(artista); // Devuelve el artista como JSON
         } catch (Exception e) {
@@ -71,8 +88,8 @@ public class ControladorArtista {
         }
     }
 
-    @GetMapping("/editArtista")
-    public ResponseEntity<?> editarArtista(@RequestParam(value = "id") Integer id,
+    @PutMapping("/editArtista")
+    public ResponseEntity<?> editarArtista(@RequestParam(value = "id", required = true) Integer id,
                                            @RequestParam(value = "nombre", required = false) String nombre,
                                            @RequestParam(value = "biografia", required = false) String biografia,
                                            @RequestParam(value = "generoMusical", required = false) DTOGeneroMusical generoMusical) {
@@ -108,17 +125,23 @@ public class ControladorArtista {
             // Guardar los cambios
             fachada.actualizarArtista(artista);
 
-            return ResponseEntity.ok("Artista actualizado con éxito: " + artistaOptional);
+            return ResponseEntity.ok("Artista actualizado con éxito: " + artista.getNombre());
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error interno: " + e.getMessage());
         }
     }
 
-    @GetMapping("/deleteArtista")
+    @RequestMapping("/deleteArtista")
     public ResponseEntity<?> eliminarArtista(@RequestParam(value = "id", required = true) int id) {
         try {
+            Optional<Artista> artistaOptional = fachada.getArtistaPorId(id);
+            if (artistaOptional.isEmpty()) {
+                throw new RuntimeException("Artista no encontrado!");
+            }
+            Artista artista = artistaOptional.get();
+            DTOArtista DTOArtista = new DTOArtista(artista.getNombre());
             fachada.eliminarArtista(id);
-            return ResponseEntity.ok("Artista con id:" + id+ "ha sido eliminado"); //ToDo: ver como veo que artista se elimina
+            return ResponseEntity.ok("El Artista: " + DTOArtista.getNombre() + " ha sido eliminado");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error interno: " + e.getMessage());
         }
