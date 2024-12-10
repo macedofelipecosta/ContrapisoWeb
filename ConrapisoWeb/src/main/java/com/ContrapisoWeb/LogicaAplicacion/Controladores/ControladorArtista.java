@@ -1,7 +1,9 @@
 package com.ContrapisoWeb.LogicaAplicacion.Controladores;
 
 import com.ContrapisoWeb.LogicaAplicacion.DTOs.DTOArtista;
+import com.ContrapisoWeb.LogicaAplicacion.DTOs.DTOCancion;
 import com.ContrapisoWeb.LogicaAplicacion.DTOs.DTOGeneroMusical;
+import com.ContrapisoWeb.LogicaAplicacion.DTOs.DTOVideoClip;
 import com.ContrapisoWeb.LogicaNegocio.Dominio.Artista;
 import com.ContrapisoWeb.LogicaNegocio.Dominio.Biografia;
 import com.ContrapisoWeb.LogicaNegocio.Dominio.GeneroMusical;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 public class ControladorArtista {
@@ -57,8 +60,8 @@ public class ControladorArtista {
         }
     }
 
-    @GetMapping("/getArtista") // URL para obtener un artista por ID
-    public ResponseEntity<?> getArtista(@RequestParam(value = "id", required = false) Integer id) {
+    @GetMapping("/getArtistaById") // URL para obtener un artista por ID
+    public ResponseEntity<?> getArtistaById(@RequestParam(value = "id", required = false) Integer id) {
         try {
             if (id == null) {
                 return ResponseEntity.badRequest().body("Falta el parámetro 'id'.");
@@ -147,4 +150,39 @@ public class ControladorArtista {
         }
     }
 
+    @GetMapping("/getCancionesArtista")
+    public ResponseEntity<?> getCancionesArtista(@RequestParam(value = "id") int id) {
+        try {
+            Optional<Artista> artistaOptional = fachada.getArtistaPorId(id);
+            if (artistaOptional.isEmpty()) {
+                throw new RuntimeException("Artista no encontrado!");
+            }
+            Artista artista = artistaOptional.get();
+            List<DTOCancion> response = artista.getCanciones().stream()
+                    .map(c -> new DTOCancion(c.getNombre(), c.getDuracion(), c.getUrl())) // Transforma cada Cancion en un DTOCancion
+                    .collect(Collectors.toList()); // Recoge el resultado en una lista
+
+            return ResponseEntity.ok(response);
+        } catch (Exception ex) {
+            return ResponseEntity.status(400).body("Error interno: " + ex.getMessage());
+        }
+    }
+
+    @GetMapping("/getVideoClipsArtista")
+    public ResponseEntity<?> getVideoClipsArtista(@RequestParam(value = "id") int id) {
+        try {
+            Optional<Artista> artistaOptional = fachada.getArtistaPorId(id);
+            if (artistaOptional.isEmpty()) {
+                throw new RuntimeException("Artista no encontrado!");
+            }
+            Artista artista = artistaOptional.get();
+            List<DTOVideoClip> response = artista.getVideoClips().stream()
+                    .map(vc -> new DTOVideoClip(vc.getTitulo(), vc.getUrl())) // Transforma cada vc en un DTOVideoClip
+                    .collect(Collectors.toList()); // Recoge el resultado en una lista
+
+            return ResponseEntity.ok(response);
+        } catch (Exception ex) {
+            return ResponseEntity.status(400).body("Error interno: " + ex.getMessage());
+        }
+    }
 }
