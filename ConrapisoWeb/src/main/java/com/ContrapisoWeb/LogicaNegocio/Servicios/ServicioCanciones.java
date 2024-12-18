@@ -21,14 +21,14 @@ public class ServicioCanciones {
     }
 
 
-    private Cancion nuevaCancion(String nombre, int duracion){
-        Cancion c= new Cancion(nombre, duracion);
+    private Cancion nuevaCancion(String nombre){
+        Cancion c= new Cancion(nombre);
         return c;
     }
 
 
-    private void agregarNuevaCanvionALista(String nombre, int duracion){
-        Cancion c= nuevaCancion(nombre, duracion);
+    private void agregarNuevaCanvionALista(String nombre){
+        Cancion c= nuevaCancion(nombre);
         this.cancionesList.add(c);
     }
 

@@ -35,6 +35,10 @@ public class Cancion {
     public Cancion() {
     }
 
+    public Cancion(String nombre) {
+        this.nombre = nombre;
+    }
+
     public Cancion(String nombre, String url) {
         this.nombre = nombre;
         this.url = url;

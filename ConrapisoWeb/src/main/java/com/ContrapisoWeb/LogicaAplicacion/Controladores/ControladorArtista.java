@@ -159,7 +159,7 @@ public class ControladorArtista {
             }
             Artista artista = artistaOptional.get();
             List<DTOCancion> response = artista.getCanciones().stream()
-                    .map(c -> new DTOCancion(c.getNombre(), c.getDuracion(), c.getUrl())) // Transforma cada Cancion en un DTOCancion
+                    .map(c -> new DTOCancion(c.getNombre(), c.getUrl())) // Transforma cada Cancion en un DTOCancion
                     .collect(Collectors.toList()); // Recoge el resultado en una lista
 
             return ResponseEntity.ok(response);
